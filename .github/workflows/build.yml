@@ -1,0 +1,31 @@
+name: Build and Upload Artifact
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch name if needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  # Specify the desired Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Zip files
+        run: zip -r my-project.zip .  # Adjust the ZIP file name as needed
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: my-project  # Adjust the artifact name as needed
+          path: my-project.zip  # Adjust the ZIP file name as needed
