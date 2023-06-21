@@ -25,20 +25,18 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      - name: Remove unused dependencies
+      - name: Remove dependencies
         run: |
-          echo "Removing unused dependencies..."
-          node -e " \
-            const fs = require('fs'); \
-            const lockfile = require('./package-lock-grid.json'); \
-            const modules = fs.readdirSync('node_modules'); \
-            for (const module of modules) { \
-              if (lockfile.dependencies[module]) { \
-                fs.rmSync('node_modules/' + module, { recursive: true, force: true }); \
-              } \
-            } \
-            console.log('Unused dependencies removed.'); \
-          "
+          echo "Removing dependencies..."
+          node -e "const fs = require('fs')"
+          node -e "const lockfile = require('./package-lock.json')"
+          node -e "const modules = fs.readdirSync('node_modules')"
+          node -e "for (const dependency in lockfile.dependencies) {"
+          node -e "  if (modules.includes(dependency)) {"
+          node -e "    fs.rmSync('node_modules/' + dependency, { recursive: true, force: true })"
+          node -e "  }"
+          node -e "}"
+          node -e "console.log('Dependencies removed.');"
 
       - name: Zip files
         run: zip -r my-project-${{ matrix.os }}.zip .  # Adjust the ZIP file name as needed
