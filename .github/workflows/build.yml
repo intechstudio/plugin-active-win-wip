@@ -20,6 +20,21 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        
+      - name: Remove unused dependencies
+        run: |
+          echo "Removing unused dependencies..."
+          node -e " \
+            const fs = require('fs'); \
+            const lockfile = require('./package-lock-grid.json'); \
+            const modules = fs.readdirSync('node_modules'); \
+            for (const module of modules) { \
+              if (!lockfile.dependencies[module]) { \
+                fs.rmSync('node_modules/' + module, { recursive: true, force: true }); \
+              } \
+            } \
+            console.log('Unused dependencies removed.'); \
+          "
 
       - name: Zip files
         run: zip -r my-project.zip .  # Adjust the ZIP file name as needed
