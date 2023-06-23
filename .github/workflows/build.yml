@@ -11,7 +11,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+#        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Checkout code
@@ -26,7 +27,9 @@ jobs:
         run: npm install
         
       - name: Run build script
-        run: node build.js
+        run: |
+          npm install archiver
+          node build.js
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.2
