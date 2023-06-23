@@ -6,20 +6,4 @@ for (const dependency in lockfile.dependencies) {
     fs.rmSync('node_modules/' + dependency, { recursive: true, force: true });
   }
 }
-console.log('Dependencies removed.');
-
-const archiver = require('archiver');
-const output = fs.createWriteStream('my-project.zip');
-const archive = archiver('zip', { zlib: { level: 9 } });
-
-output.on('close', () => {
-  console.log('Zip file created.');
-});
-
-archive.on('error', (err) => {
-  throw err;
-});
-
-archive.pipe(output);
-archive.directory('node_modules', false);
-archive.finalize();
+console.log('Dependencies removed.')
