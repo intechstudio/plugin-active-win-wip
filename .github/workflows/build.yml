@@ -36,6 +36,4 @@ jobs:
         with:
           name: plugin-result
           path: |
-            my-project-ubuntu-latest.zip
-            my-project-windows-latest.zip
-            my-project-macos-latest.zip
+            my-project.zip
