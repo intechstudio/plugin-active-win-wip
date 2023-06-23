@@ -28,8 +28,10 @@ jobs:
         
       - name: Run build script
         run: |
-          npm install archiver
           node build.js
+          npm install archiver
+          node install -g archiver
+          node archive.js
       
       - name: Rename artifact
         if: ${{ matrix.os == 'ubuntu-latest' }}
