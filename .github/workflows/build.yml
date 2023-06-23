@@ -28,14 +28,15 @@ jobs:
         
       - name: Run build script
         run: node build.js
+        
+      - name: Zip files (Linux and macOS)
+        if: matrix.os != 'windows-latest'
+        run: zip -r my-project.zip .
 
-      - name: Zip files
-        run: |
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            powershell -Command "Compress-Archive -Path '.' -DestinationPath 'my-project.zip'"
-          else
-            zip -r my-project.zip .
-          fi
+      - name: Zip files (Windows)
+        if: matrix.os == 'windows-latest'
+        run: powershell -Command "Compress-Archive -Path '.' -DestinationPath 'my-project.zip'"
+
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
