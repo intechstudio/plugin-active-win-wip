@@ -27,29 +27,18 @@ jobs:
         run: npm install
         
       - name: Run build script
+        run: node build.js
+
+      - name: Zip files
         run: |
-          node build.js
-          npm install archiver
-          node install -g archiver
-          node archive.js
-      
-      - name: Rename artifact
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: mv my-project.zip my-project-ubuntu-latest.zip
-
-      - name: Rename artifact
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: move my-project.zip my-project-windows-latest.zip
-
-      - name: Rename artifact
-        if: ${{ matrix.os == 'macos-latest' }}
-        run: mv my-project.zip my-project-macos-latest.zip
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            powershell -Command "Compress-Archive -Path '.' -DestinationPath 'my-project.zip'"
+          else
+            zip -r my-project.zip .
+          fi
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v2
         with:
-          name: plugin-result
-          path: |
-            my-project-ubuntu-latest.zip
-            my-project-windows-latest.zip
-            my-project-macos-latest.zip
+          name: my-project-${{ matrix.os }}
+          path: my-project.zip
