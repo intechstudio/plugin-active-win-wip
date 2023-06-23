@@ -25,13 +25,8 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      - name: Remove dependencies
-        run: |
-          echo "Removing dependencies..."
-          node -e "const fs = require('fs'); const lockfile = require('./package-lock.json'); const modules = fs.readdirSync('node_modules'); for (const dependency in lockfile.dependencies) { if (modules.includes(dependency)) { fs.rmSync('node_modules/' + dependency, { recursive: true, force: true }); } } console.log('Dependencies removed.');"
-
-      - name: Zip files
-        run: zip -r my-project-${{ matrix.os }}.zip .  # Adjust the ZIP file name as needed
+      - name: Run build script
+        run: node build.js
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.2
