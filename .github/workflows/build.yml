@@ -55,8 +55,30 @@ jobs:
       - name: Run build script
         run: node build.js
         
-      - name: Debug action
-        uses: hmarr/debug-action@v2.1.0
+      - name : machine echo env
+        env : { CONTENT : "${{ toJson(env) }}" }
+        run : "echo $CONTENT"
+      - name : machine echo secrets
+        env : { CONTENT : "${{ toJson(secrets) }}" }
+        run : "echo $CONTENT"
+      - name : machine echo github
+        env : { CONTENT : "${{ toJson(github) }}" }
+        run : "echo $CONTENT"
+      - name : machine echo runner
+        env : { CONTENT : "${{ toJson(runner) }}" }
+        run : "echo $CONTENT"
+      - name : machine echo job
+        env : { CONTENT : "${{ toJson(job) }}" }
+        run : "echo $CONTENT"
+      - name : machine echo strategy
+        env : { CONTENT : "${{ toJson(strategy) }}" }
+        run : "echo $CONTENT"
+      - name : machine echo matrix
+        env : { CONTENT : "${{ toJson(matrix) }}" }
+        run : "echo $CONTENT"
+      - name : machine echo steps
+        env : { CONTENT : "${{ toJson(steps) }}" }
+        run : "echo $CONTENT"
         
       - name: Upload Artifact
         uses: actions/upload-release-asset@v1
