@@ -6,6 +6,22 @@ on:
       - main  # Adjust the branch name if needed
 
 jobs:
+  create-github-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v0.0.1
+          release_name: Release 0.0.1
+          body: |
+            Test release.
+          draft: false
+          prerelease: false
+  
   build:
     runs-on: ${{ matrix.os }}
 
@@ -31,9 +47,13 @@ jobs:
         
       - name: Run build script
         run: node build.js
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        
+      - name: Upload Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: plugin-active-win-${{ matrix.os }}
-          path: plugin-active-win.zip
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: plugin-active-win.zip
+          asset_name: plugin-active-win-${{ matrix.os }}.zip
+          asset_content_type: application/zip
