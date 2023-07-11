@@ -1,5 +1,5 @@
 const fs = require('fs');
-const lockfile = require('./package-lock.json');
+const lockfile = require('./package-lock-grid.json');
 const modules = fs.readdirSync('node_modules');
 for (const dependency in lockfile.dependencies) {
   if (modules.includes(dependency)) {
