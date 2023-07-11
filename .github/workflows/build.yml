@@ -27,7 +27,7 @@ jobs:
         run: npm install
         
       - name: Install archiver package
-        run: npm install -g archiver
+        run: npm install archiver
         
       - name: Run build script
         run: node build.js
