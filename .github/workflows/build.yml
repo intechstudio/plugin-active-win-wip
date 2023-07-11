@@ -9,6 +9,11 @@ jobs:
   create-github-release:
     runs-on: ubuntu-latest
     steps:
+      - name: Delete Release
+        uses: larryjoelane/delete-release-action@v1.0.24
+        with:
+          release-name: Release 0.0.1
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
