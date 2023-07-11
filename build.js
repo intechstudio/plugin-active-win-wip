@@ -3,7 +3,7 @@ const archiver = require('archiver');
 const lockfile = require('./package-lock-grid.json');
 const modules = fs.readdirSync('node_modules');
 const output = fs.createWriteStream('plugin-active-win.zip');
-const archive = archiver('zip', { zlib: { level: 9 } });
+const archive = archiver('zip', { zlib: { level: 1 } });
 
 archive.pipe(output);
 
