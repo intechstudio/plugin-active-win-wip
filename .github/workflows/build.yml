@@ -79,6 +79,9 @@ jobs:
       - name : machine echo steps
         env : { CONTENT : "${{ toJson(steps) }}" }
         run : "echo $CONTENT"
+      - name : machine echo needs
+        env : { CONTENT : "${{ toJson(needs) }}" }
+        run : "echo $CONTENT"
         
       - name: Upload Artifact
         uses: actions/upload-release-asset@v1
