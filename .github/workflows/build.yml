@@ -11,8 +11,8 @@ jobs:
 
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+#        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout code
@@ -31,15 +31,15 @@ jobs:
         
       - name: Zip files (Linux and macOS)
         if: matrix.os != 'windows-latest'
-        run: zip -r my-project.zip .
+        run: zip -r plugin-active-win.zip . -x 'archive.js' 'build.js' 'package-lock-grid.json' '.github/*'
 
       - name: Zip files (Windows)
         if: matrix.os == 'windows-latest'
-        run: powershell -Command "Compress-Archive -Path '.' -DestinationPath 'my-project.zip'"
+        run: powershell -Command "Compress-Archive -Path '.' -DestinationPath 'plugin-active-win.zip' -Exclude 'archive.js','build.js','package-lock-grid.json','.github/*'"
 
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: my-project-${{ matrix.os }}
-          path: my-project.zip
+          name: plugin-active-win-${{ matrix.os }}
+          path: plugin-active-win.zip
