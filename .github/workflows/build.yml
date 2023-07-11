@@ -12,9 +12,9 @@ jobs:
       - name: Delete all releases
         # You may pin to the exact commit or the version.
         # uses: amol234545/auto-bulid-exe@fa51f02942d8ff9626aadf83dd2621a4e2193391
-        uses: amol234545/auto-bulid-exe@v1
+        uses: larryjoelane/delete-release-action@v1.0.24
         with:
-          tag: v0.0.1
+          release-name: v0.0.1
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
         id: create_release
