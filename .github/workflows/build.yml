@@ -30,34 +30,6 @@ jobs:
             Test release.
           draft: false
           prerelease: false
-          
-      - name : machine echo env
-        env : { CONTENT : "${{ toJson(env) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo secrets
-        env : { CONTENT : "${{ toJson(secrets) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo github
-        env : { CONTENT : "${{ toJson(github) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo runner
-        env : { CONTENT : "${{ toJson(runner) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo job
-        env : { CONTENT : "${{ toJson(job) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo strategy
-        env : { CONTENT : "${{ toJson(strategy) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo matrix
-        env : { CONTENT : "${{ toJson(matrix) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo steps
-        env : { CONTENT : "${{ toJson(steps) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo needs
-        env : { CONTENT : "${{ toJson(needs) }}" }
-        run : "echo $CONTENT"
         
       - name: Save release output
         id: save_output
@@ -68,8 +40,8 @@ jobs:
     needs: create-github-release 
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+#        os: [ubuntu-latest]
 
     steps:
       - name: Checkout code
@@ -88,35 +60,7 @@ jobs:
         
       - name: Run build script
         run: node build.js
-        
-      - name : machine echo env
-        env : { CONTENT : "${{ toJson(env) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo secrets
-        env : { CONTENT : "${{ toJson(secrets) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo github
-        env : { CONTENT : "${{ toJson(github) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo runner
-        env : { CONTENT : "${{ toJson(runner) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo job
-        env : { CONTENT : "${{ toJson(job) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo strategy
-        env : { CONTENT : "${{ toJson(strategy) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo matrix
-        env : { CONTENT : "${{ toJson(matrix) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo steps
-        env : { CONTENT : "${{ toJson(steps) }}" }
-        run : "echo $CONTENT"
-      - name : machine echo needs
-        env : { CONTENT : "${{ toJson(needs) }}" }
-        run : "echo $CONTENT"
-        
+                
       - name: Upload Artifact
         uses: tanyagray/action-upload-release-asset@v1.1.3
         env:
