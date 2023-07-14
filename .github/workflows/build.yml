@@ -32,7 +32,7 @@ jobs:
           draft: false
           prerelease: false
       - name: Print outputs
-        run: echo "${{steps.create_release.outputs}}"
+        run: echo "${{toJson(steps.create_release.outputs)}}"
       - name: Save release output
         id: save_output
         run: |
