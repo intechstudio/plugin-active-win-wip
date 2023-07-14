@@ -1,9 +1,9 @@
 const activeWindow = require('active-win');
 
 let interval = 1000
-let pageActivatorCriteria_0 = ''
-let pageActivatorCriteria_1 = ''
-let pageActivatorCriteria_2 = ''
+let pageActivatorCriteria_0 = 'Editor'
+let pageActivatorCriteria_1 = 'Firefox'
+let pageActivatorCriteria_2 = 'Discord'
 let pageActivatorCriteria_3 = ''
 let lastPageActivator = ''
 let isEnabled = false
