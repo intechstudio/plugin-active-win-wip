@@ -6,11 +6,11 @@ const output = fs.createWriteStream('plugin-active-win.zip');
 const archive = archiver('zip', { zlib: { level: 9 } });
 
 // Remove dependencies from node_modules
-for (const dependency in lockfile.dependencies) {
+/*for (const dependency in lockfile.dependencies) {
   if (modules.includes(dependency)) {
     fs.rmSync(`node_modules/${dependency}`, { recursive: true, force: true });
   }
-}
+}*/
 
 const subfolder = 'my-project-files';
 if (!fs.existsSync(subfolder)) {
