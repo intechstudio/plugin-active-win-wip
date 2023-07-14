@@ -1,9 +1,9 @@
 const activeWindow = require('active-win');
 
 let interval = 1000
-let pageActivatorCriteria_0 = 'Editor'
-let pageActivatorCriteria_1 = 'Firefox'
-let pageActivatorCriteria_2 = 'Discord'
+let pageActivatorCriteria_0 = ''
+let pageActivatorCriteria_1 = ''
+let pageActivatorCriteria_2 = ''
 let pageActivatorCriteria_3 = ''
 let lastPageActivator = ''
 let isEnabled = false
@@ -13,9 +13,9 @@ let controller = undefined
 exports.loadPlugin = async function(gridController, persistedData) {
     controller = gridController
     interval = persistedData?.interval ?? 1000
-    pageActivatorCriteria_0 = persistedData?.pageActivatorCriteria_0 ?? ''
-    pageActivatorCriteria_1 = persistedData?.pageActivatorCriteria_1 ?? ''
-    pageActivatorCriteria_2 = persistedData?.pageActivatorCriteria_2 ?? ''
+    pageActivatorCriteria_0 = persistedData?.pageActivatorCriteria_0 ?? 'Editor'
+    pageActivatorCriteria_1 = persistedData?.pageActivatorCriteria_1 ?? 'Discord'
+    pageActivatorCriteria_2 = persistedData?.pageActivatorCriteria_2 ?? 'Firefox'
     pageActivatorCriteria_3 = persistedData?.pageActivatorCriteria_3 ?? ''
     isEnabled = true
     runLoop()
