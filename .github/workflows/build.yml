@@ -31,8 +31,6 @@ jobs:
             Test release.
           draft: false
           prerelease: false
-      - name: Print outputs
-        run: echo "${{toJson(steps.create_release.outputs)}}"
       - name: Save release output
         id: save_output
         run: |
