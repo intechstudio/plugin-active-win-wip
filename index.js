@@ -1,5 +1,4 @@
 const activeWindow = require('active-win');
-const { askForScreenCaptureAccess } = require('node-mac-permissions')
 
 let interval = 1000
 let pageActivatorCriteria_0 = ''
@@ -19,7 +18,6 @@ exports.loadPlugin = async function(gridController, persistedData) {
     pageActivatorCriteria_2 = persistedData?.pageActivatorCriteria_2 ?? 'Firefox'
     pageActivatorCriteria_3 = persistedData?.pageActivatorCriteria_3 ?? ''
     isEnabled = true
-    askForScreenCaptureAccess()
     runLoop()
     
     return true
