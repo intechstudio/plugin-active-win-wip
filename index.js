@@ -1,22 +1,24 @@
 const activeWindow = require('active-win');
 
 let interval = 1000
-let pageActivatorCriteria_0 = ''
-let pageActivatorCriteria_1 = ''
-let pageActivatorCriteria_2 = ''
-let pageActivatorCriteria_3 = ''
+let pageActivatorCriteria0 = ''
+let pageActivatorCriteria1 = ''
+let pageActivatorCriteria2 = ''
+let pageActivatorCriteria3 = ''
 let lastPageActivator = ''
 let isEnabled = false
 let currentTimeoutId = undefined
 let controller = undefined
 
+let messagePorts = new Set()
+
 exports.loadPlugin = async function(gridController, persistedData) {
     controller = gridController
     interval = persistedData?.interval ?? 1000
-    pageActivatorCriteria_0 = persistedData?.pageActivatorCriteria_0 ?? 'Editor'
-    pageActivatorCriteria_1 = persistedData?.pageActivatorCriteria_1 ?? 'Discord'
-    pageActivatorCriteria_2 = persistedData?.pageActivatorCriteria_2 ?? 'Firefox'
-    pageActivatorCriteria_3 = persistedData?.pageActivatorCriteria_3 ?? ''
+    pageActivatorCriteria0 = persistedData?.pageActivatorCriteria0 ?? ''
+    pageActivatorCriteria1 = persistedData?.pageActivatorCriteria1 ?? ''
+    pageActivatorCriteria2 = persistedData?.pageActivatorCriteria2 ?? ''
+    pageActivatorCriteria3 = persistedData?.pageActivatorCriteria3 ?? ''
     isEnabled = true
     runLoop()
     
@@ -25,40 +27,55 @@ exports.loadPlugin = async function(gridController, persistedData) {
 
 exports.unloadPlugin = async function() {
     controller = undefined
+    messagePorts.forEach((port) => port.close())
+    messagePorts.clear()
     cancelLoop()
 }
 
-exports.executeAction = async function(actionId, payload) {
-    if (actionId == 0){
+exports.addMessagePort = async function(port) {
+    port.on("message", (e) => {
+        onMessage(port, e.data)
+    })
+    
+    messagePorts.add(port)
+    port.on("close", () => {
+        messagePorts.delete(port)
+    })
+    port.start()
+}
+
+async function onMessage(port, data) {
+    if (data.type === 'request-configuration'){
+        port.postMessage({
+            type: 'configuration',
+            interval,
+            pageActivatorCriteria0,
+            pageActivatorCriteria1,
+            pageActivatorCriteria2,
+            pageActivatorCriteria3
+        })
+    } else if (data.type === 'save-configuration') {
         cancelLoop()
 
-        interval = payload.interval;
-        pageActivatorCriteria_0 = payload.pageActivatorCriteria_0
-        pageActivatorCriteria_1 = payload.pageActivatorCriteria_1
-        pageActivatorCriteria_2 = payload.pageActivatorCriteria_2
-        pageActivatorCriteria_3 = payload.pageActivatorCriteria_3
+        interval = data.interval ?? interval
+        pageActivatorCriteria0 = data.pageActivatorCriteria0 ?? pageActivatorCriteria0
+        pageActivatorCriteria1 = data.pageActivatorCriteria1 ?? pageActivatorCriteria1
+        pageActivatorCriteria2 = data.pageActivatorCriteria2 ?? pageActivatorCriteria2
+        pageActivatorCriteria3 = data.pageActivatorCriteria3 ?? pageActivatorCriteria3
         isEnabled = true
         
         controller.sendMessageToRuntime({
             id : 'persist-data',
             data : {
                 interval,
-                pageActivatorCriteria_0,
-                pageActivatorCriteria_1,
-                pageActivatorCriteria_2,
-                pageActivatorCriteria_3
+                pageActivatorCriteria0,
+                pageActivatorCriteria1,
+                pageActivatorCriteria2,
+                pageActivatorCriteria3
             }
         })
 
-        runLoop()
-    } else if (actionId == 1){
-        return {
-            interval,
-            pageActivatorCriteria_0,
-            pageActivatorCriteria_1,
-            pageActivatorCriteria_2,
-            pageActivatorCriteria_3
-        }
+        await runLoop()
     }
 }
 
@@ -83,10 +100,10 @@ async function checkActiveWindow(){
         }
 
         let criteria = [
-            pageActivatorCriteria_0,
-            pageActivatorCriteria_1,
-            pageActivatorCriteria_2,
-            pageActivatorCriteria_3,
+            pageActivatorCriteria0,
+            pageActivatorCriteria1,
+            pageActivatorCriteria2,
+            pageActivatorCriteria3,
         ];
 
         for (let i = 0; i < 4; i++) {
@@ -95,12 +112,15 @@ async function checkActiveWindow(){
 
             controller.sendMessageToRuntime({
                 id : 'change-page',
-                num : i,
-                debugActiveWin : {
+                num : i
+            })
+            for (const port of messagePorts){
+                port.postMessage({
+                    type: "active-info",
                     owner: result.owner,
                     title: result.title
-                }
-            })
+                })
+            }
             return;
             }
         }
@@ -111,9 +131,17 @@ async function checkActiveWindow(){
             id : 'change-page',
             num : 0
         })
+        
+        for (const port of messagePorts){
+            port.postMessage({
+                type: "active-info",
+                owner: result.owner,
+                title: result.title
+            })
+        }
         } catch (e) {
             controller.sendMessageToRuntime({
-                error : JSON.stringify(e)
+                error : e.message
             })
     }
 }

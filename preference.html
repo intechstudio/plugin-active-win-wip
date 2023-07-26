@@ -1,0 +1,107 @@
+<div class="p-4 bg-secondary rounded-lg flex flex-col mb-4">
+  <div class="flex flex-col">
+    <div class="pb-2">Page Activator</div>
+    <div class="flex py-2 text-white items-center">
+      <div class="mx-1">Poll interval</div>
+      <input
+        class="bg-primary m-1"
+        type="range"
+        min="200"
+        max="2000"
+        step="50"
+        value="1000"
+        id="interval-slider"
+      />
+      <div class="mx-1">
+        <div id="interval-text">1000</div> ms
+      </div>
+    </div>
+
+    <div class="text-gray-400 py-1 mt-1 text-sm">
+      <b>Active window:</b>
+      <div id="active-window"> N/A </div>
+    </div>
+
+    <div class="text-gray-400 py-1 mt-1 text-sm">
+      <b>Active title:</b>
+      <div id="active-title"> N/A </div>
+    </div>
+
+    <input
+      type="text"
+      placeholder="Page 1 trigger application"
+      class="bg-primary my-1"
+      id="page-activator-criteria-0"
+    />
+    <input
+      type="text"
+      placeholder="Page 2 trigger application"
+      class="bg-primary my-1"
+      id="page-activator-criteria-1"
+    />
+    <input
+      type="text"
+      placeholder="Page 3 trigger application"
+      class="bg-primary my-1"
+      id="page-activator-criteria-2"
+    />
+    <input
+      type="text"
+      placeholder="Page 4 trigger application"
+      class="bg-primary my-1"
+      id="page-activator-criteria-3"
+    />
+  </div>
+</div>
+<script>
+  {
+    const intervalSlider = document.getElementById("interval-slider")
+    const intervalText = document.getElementById("interval-text")
+    const activeWindow = document.getElementById("active-window")
+    const activeTitle = document.getElementById("active-title")
+    const pageActivator0 = document.getElementById("page-activator-criteria-0")
+    const pageActivator1 = document.getElementById("page-activator-criteria-1")
+    const pageActivator2 = document.getElementById("page-activator-criteria-2")
+    const pageActivator3 = document.getElementById("page-activator-criteria-3")
+
+
+    const messagePort = createPluginMessagePort('plugin-active-win')
+    messagePort.onmessage = (e) => {
+      const data = e.data
+      console.log(data)
+      if (data.type === "configuration"){
+        intervalSlider.value = data.interval
+        intervalText.innerText = data.interval
+        pageActivator0.value = data.pageActivatorCriteria0
+        pageActivator1.value = data.pageActivatorCriteria1
+        pageActivator2.value = data.pageActivatorCriteria2
+        pageActivator3.value = data.pageActivatorCriteria3
+      } else if (data.type === "active-info") {
+        activeWindow.innerText = data.owner.name
+        activeTitle.innerText = data.title
+      }
+    }
+    messagePort.start()
+    messagePort.postMessage({
+      type: "request-configuration"
+    })
+
+    function updateConfiguration() {
+      const interval = Math.round(intervalSlider.value) 
+      intervalText.innerText = interval
+      messagePort.postMessage({
+        type: "save-configuration",
+        interval,
+        pageActivatorCriteria0: pageActivator0.value,
+        pageActivatorCriteria1: pageActivator1.value,
+        pageActivatorCriteria2: pageActivator2.value,
+        pageActivatorCriteria3: pageActivator3.value
+      })
+    }
+    intervalSlider.addEventListener("change", updateConfiguration)
+    pageActivator0.addEventListener("change", updateConfiguration)
+    pageActivator1.addEventListener("change", updateConfiguration)
+    pageActivator2.addEventListener("change", updateConfiguration)
+    pageActivator3.addEventListener("change", updateConfiguration)
+  }
+</script>

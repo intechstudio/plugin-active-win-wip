@@ -1,5 +1,5 @@
 {
-  "name": "test_module",
+  "name": "plugin_active_win",
   "version": "1.0.0",
   "description": "Active Window Plugin",
   "main": "index.js",
@@ -9,6 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "active-win": "^8.1.0"
+    "active-win": "^8.1.0",
+    "archiver": "^5.3.1"
+  },
+  "grid_editor": {
+	"preference": "preference.html"
   }
 }
